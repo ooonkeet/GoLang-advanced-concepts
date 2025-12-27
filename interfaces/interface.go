@@ -6,6 +6,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/ooonkeet/golang-advanced/interfaces/mysqldb"
 )
@@ -28,11 +29,11 @@ func (this Application) Run(){
 	err:=this.db.
 	InsertUser(userName)
 	if err!=nil{
-		log.Println(err)
+		log.Println("couldn't insert user: %s", userName)
 	}
 	user,err:=this.db.SelectSingleUser(userName)
 	if err!=nil{
-		log.Println(err)
+		log.Println("couldn't fetch user: %s", userName)
 	}
 	fmt.Println(user)
 }
@@ -42,11 +43,11 @@ func NewApplication(db dbContract) *Application{
 // we pass the db which needs to conform to the contract and then we are going to return the struct to new instance with the db we pass in here embeeded into the instance and then from our main function
 
 func main(){
-	dbUser:="user"
-	dbPass:="password"
-	dbHost:="host"
-	dbPort:="port"
-	dbName:="name"
+	dbUser:=os.Getenv("DB_USER")
+	dbPass:=os.Getenv("DB_PASSWORD")
+	dbHost:=os.Getenv("DB_HOST")
+	dbPort:=os.Getenv("OS_PORT")
+	dbName:=os.Getenv("DB_NAME")
 	db,err:=mysqldb.New(dbUser,dbPass,dbHost,dbPort,dbName) //going to get the DB back which in this case is mysqldb
 	if err!=nil{
 		log.Fatal("failed to initiate db connection %v",err)
